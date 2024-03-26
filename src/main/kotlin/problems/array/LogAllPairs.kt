@@ -21,3 +21,6 @@ fun printPairsInArray(itemArray:IntArray){
         }
     }
 }
+
+/*
+This code's Big O is O(n^2)*/
