@@ -8,8 +8,8 @@ import kotlin.system.measureTimeMillis
 * Output will be  [0,1,2,3,4,4,4,5,7,7,9]
 * */
 fun main() {
-    val array1 = IntArray(50) { index -> index * 2 }
-    val array2 = IntArray(50) { index -> index * 5 }
+    val array1 = IntArray(5000) { index -> index * 2 }
+    val array2 = IntArray(5000) { index -> index * 5 }
 
     val time1 = measureNanoTime {
         val resultArray1 = mergeArrays1(array1, array2)
@@ -21,9 +21,15 @@ fun main() {
         println(resultArray2.contentToString())
     }
 
+    val time3 = measureNanoTime {
+        val resultArray3 = mergeArrays3(array1, array2)
+        println(resultArray3.contentToString())
+    }
+
 
     println("Time taken in first approach $time1") //1026500
     println("Time taken in second approach $time2") //59208
+    println("Time taken in second approach $time3") //59208
 
 }
 
@@ -100,14 +106,43 @@ fun mergeArrays2(inputArray1: IntArray, inputArray2: IntArray): IntArray {
         if (inputArray1.size > comparingIndexOne &&
             inputArray1[comparingIndexOne] < inputArray2[comparingIndexTwo]
         ) {
-            resultArr[i] = inputArray1[comparingIndexOne]
-            comparingIndexOne++
+            resultArr[i] = inputArray1[comparingIndexOne++]
         } else {
-            resultArr[i] = inputArray2[comparingIndexTwo]
-            comparingIndexTwo++
+            resultArr[i] = inputArray2[comparingIndexTwo++]
         }
     }
 
     return resultArr
+
+}
+
+fun mergeArrays3(inputArray1:IntArray,inputArray2:IntArray):IntArray{
+    //Handel empty cases
+    if(inputArray1.isEmpty() && inputArray2.isEmpty()) return IntArray(0)
+    if(inputArray1.isEmpty() ) return inputArray2
+    if(inputArray2.isEmpty() ) return inputArray1
+
+    val resultArray = IntArray(inputArray1.size+inputArray2.size)
+    var indexOne = 0 //index for array 1
+    var indexTwo = 0 //index for array 2
+    var indexRes = 0 //index for result array
+
+    while(indexOne<inputArray1.size && indexTwo<inputArray2.size){
+        if(inputArray1[indexOne]<inputArray2[indexTwo]){
+            resultArray[indexRes++] = inputArray1[indexOne++]
+        }else{
+            resultArray[indexRes++] = inputArray2[indexTwo++]
+        }
+    }
+
+    while (indexOne<inputArray1.size){
+        resultArray[indexRes++] = inputArray1[indexOne++]
+    }
+
+    while (indexTwo<inputArray2.size){
+        resultArray[indexRes++] = inputArray2[indexTwo++]
+    }
+
+    return resultArray
 
 }
